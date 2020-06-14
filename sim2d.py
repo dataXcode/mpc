@@ -8,7 +8,7 @@ import time
 
 
 def sim_run(options, MPC):
-    start = time.clock()
+    start = time.process_time()
     # Simulator Options
     FIG_SIZE = options['FIG_SIZE'] # [Width, Height]
     OBSTACLES = options['OBSTACLES']
@@ -47,12 +47,12 @@ def sim_run(options, MPC):
                                 tol = 1e-5)
         print('Step ' + str(i) + ' of ' + str(sim_total) + '   Time ' + str(round(time.time() - start_time,5)))
         u = u_solution.x
-        y = mpc.plant_model(state_i[-1], mpc.dt, u[0], u[1])
+        y = mpc.model(state_i[-1], mpc.delta_t, u[0], u[1])
         if (i > 130 and ref_2 != None):
             ref = ref_2
         predicted_state = np.array([y])
         for j in range(1, mpc.horizon):
-            predicted = mpc.plant_model(predicted_state[-1], mpc.dt, u[2*j], u[2*j+1])
+            predicted = mpc.model(predicted_state[-1], mpc.delta_t, u[2*j], u[2*j+1])
             predicted_state = np.append(predicted_state, np.array([predicted]), axis=0)
         predict_info += [predicted_state]
         state_i = np.append(state_i, np.array([y]), axis=0)
@@ -154,7 +154,7 @@ def sim_run(options, MPC):
         return patch_car, time_text
 
 
-    print("Compute Time: ", round(time.clock() - start, 3), "seconds.")
+    print("Compute Time: ", round(time.process_time() - start, 3), "seconds.")
     # Animation.
     car_ani = animation.FuncAnimation(fig, update_plot, frames=range(1,len(state_i)), interval=100, repeat=True, blit=False)
     #car_ani.save('mpc-video.mp4')
