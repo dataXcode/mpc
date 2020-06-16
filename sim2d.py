@@ -108,8 +108,8 @@ def sim_run(options, MPC):
 
     # Obstacles
     if OBSTACLES:
-        patch_obs = mpatches.Circle((mpc.x_obs, mpc.y_obs),0.5)
-        ax.add_patch(patch_obs)
+        patch_obstacle = mpatches.Circle((mpc.x_obstacle, mpc.y_obstacle),0.5)
+        ax.add_patch(patch_obstacle)
 
     # Shift xy, centered on rear of car to rear left corner of car.
     def car_patch_pos(x, y, psi):
